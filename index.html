@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     :root { 
-      --orbit-primary: #00f2ff; /* Cian neón */
+      --orbit-primary: #00f2ff; /* Cian neÃ³n */
       --orbit-secondary: #7000ff; /* Morado espacial */
       --orbit-bg: #0a0b10; 
       --orbit-card: #161b22;
@@ -39,13 +39,13 @@
 <h1>ORBIT Paddle</h1>
 
 <div class="card">
-  <h3>?? Registro de Jugador</h3>
+  <h3>ğŸš€ Registro de Jugador</h3>
   <input id="playerName" placeholder="Nombre del astronauta...">
-  <button onclick="addPlayer()">Añadir a la Misión</button>
+  <button onclick="addPlayer()">AÃ±adir a la MisiÃ³n</button>
 </div>
 
 <div class="card">
-  <h3>?? Resultado del Encuentro</h3>
+  <h3>â˜„ï¸ Resultado del Encuentro</h3>
   <b>Pareja Alpha</b>
   <select id="a1"></select>
   <select id="a2"></select>
@@ -57,7 +57,7 @@
 </div>
 
 <div class="card">
-  <h3>?? Ranking Galáctico</h3>
+  <h3>ğŸ“Š Ranking GalÃ¡ctico</h3>
   <table>
     <thead>
       <tr>
@@ -71,7 +71,7 @@
 </div>
 
 <div class="card">
-  <h3>?? Bitácora de Partidos</h3>
+  <h3>ğŸ“œ BitÃ¡cora de Partidos</h3>
   <div id="matchHistory"></div>
 </div>
 
@@ -91,7 +91,7 @@ function addPlayer() {
   const input = document.getElementById('playerName');
   const name = input.value.trim();
   if (!name || players.find(p => p.name === name)) return;
-  // Añadimos 'played' para contar partidos
+  // AÃ±adimos 'played' para contar partidos
   players.push({ name, points: 0, played: 0 });
   input.value = '';
   save();
@@ -112,7 +112,7 @@ function processMatch(winnerSide) {
   const winners = winnerSide === 'A' ? [pA1, pA2] : [pB1, pB2];
   const losers = winnerSide === 'A' ? [pB1, pB2] : [pA1, pA2];
 
-  // Actualizar estadísticas
+  // Actualizar estadÃ­sticas
   players.forEach(p => {
     if (all.includes(p.name)) {
       p.played += 1; // Sumar partido jugado a los 4
@@ -132,7 +132,7 @@ function processMatch(winnerSide) {
 }
 
 function resetData() {
-  if (confirm("¿Confirmas el reinicio total de la base de datos?")) {
+  if (confirm("Â¿Confirmas el reinicio total de la base de datos?")) {
     players = [];
     history = [];
     save();
@@ -150,7 +150,7 @@ function render() {
     </tr>
   `).join('');
 
-  // Historial (últimos 5)
+  // Historial (Ãºltimos 5)
   document.getElementById('matchHistory').innerHTML = history.slice(0, 5).map(m => `
     <div class="history-item">
       <div class="date">${m.date}</div>
@@ -163,7 +163,7 @@ function render() {
   ['a1', 'a2', 'b1', 'b2'].forEach(id => {
     const s = document.getElementById(id);
     const current = s.value;
-    s.innerHTML = players.map(p => <option value="${p.name}">${p.name}</option>).join('');
+    s.innerHTML = players.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
     s.value = current;
   });
 }
@@ -172,3 +172,4 @@ render();
 </script>
 </body>
 </html>
+

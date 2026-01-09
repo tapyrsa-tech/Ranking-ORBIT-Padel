@@ -1,175 +1,171 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>ORBIT Paddle</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    :root { 
-      --orbit-primary: #00f2ff; /* Cian neón */
-      --orbit-secondary: #7000ff; /* Morado espacial */
-      --orbit-bg: #0a0b10; 
-      --orbit-card: #161b22;
-      --text: #ffffff;
-    }
-    body { font-family: 'Segoe UI', Roboto, sans-serif; padding: 20px; background: var(--orbit-bg); color: var(--text); max-width: 600px; margin: auto; }
-    h1 { text-align: center; color: var(--orbit-primary); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px var(--orbit-primary); }
-    h3 { color: var(--orbit-secondary); border-bottom: 1px solid #333; padding-bottom: 5px; }
-    
-    input, button, select { padding: 12px; margin: 8px 0; width: 100%; border-radius: 8px; border: 1px solid #333; box-sizing: border-box; font-size: 16px; background: #0d1117; color: white; }
-    
-    button { background: linear-gradient(45deg, var(--orbit-secondary), #4b00ad); color: white; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; }
-    button:active { transform: scale(0.98); }
-    .btn-win { background: linear-gradient(45deg, var(--orbit-primary), #00a2ad); color: #000; }
-    .btn-danger { background: #2d0000; color: #ff4d4d; border: 1px solid #4d0000; margin-top: 30px; }
-
-    .card { background: var(--orbit-card); padding: 20px; border-radius: 16px; margin-bottom: 20px; border: 1px solid #30363d; }
-    
-    table { width: 100%; border-collapse: collapse; }
-    th, td { padding: 12px; border-bottom: 1px solid #30363d; text-align: center; }
-    th { color: var(--orbit-primary); font-size: 0.8em; text-transform: uppercase; }
-    
-    .history-item { font-size: 0.85em; border-bottom: 1px solid #30363d; padding: 12px 0; }
-    .date { color: #6e7681; font-size: 0.75em; }
-    .win-label { color: var(--orbit-primary); font-weight: bold; }
-  </style>
+<meta charset="UTF-8">
+<title>ORBIT Paddle</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{
+  --orbit-primary:#00f2ff;
+  --orbit-secondary:#7000ff;
+  --orbit-bg:#0a0b10;
+  --orbit-card:#161b22;
+  --text:#ffffff;
+}
+body{font-family:Segoe UI,Roboto,sans-serif;padding:20px;background:var(--orbit-bg);color:var(--text);max-width:700px;margin:auto;}
+h1{text-align:center;color:var(--orbit-primary);letter-spacing:2px;}
+h3{color:var(--orbit-secondary);border-bottom:1px solid #333;padding-bottom:5px;}
+input,select,button{padding:10px;margin:6px 0;width:100%;border-radius:8px;border:1px solid #333;background:#0d1117;color:white;}
+button{background:linear-gradient(45deg,var(--orbit-secondary),#4b00ad);font-weight:bold;cursor:pointer;}
+.btn-win{background:linear-gradient(45deg,var(--orbit-primary),#00a2ad);color:#000;}
+.btn-safe{background:linear-gradient(45deg,#0066ff,#0044aa);}
+.card{background:var(--orbit-card);padding:20px;border-radius:16px;margin-bottom:20px;border:1px solid #30363d;}
+table{width:100%;border-collapse:collapse;}
+th,td{padding:8px;border-bottom:1px solid #30363d;text-align:center;}
+th{color:var(--orbit-primary);font-size:.75em;}
+</style>
 </head>
+
 <body>
 
 <h1>ORBIT Paddle</h1>
 
 <div class="card">
-  <h3>🚀 Registro de Jugador</h3>
-  <input id="playerName" placeholder="Nombre del astronauta...">
-  <button onclick="addPlayer()">Añadir a la Misión</button>
+<h3>🚀 Introducir nuevo jugador</h3>
+<input id="playerName" placeholder="Nombre del jugador">
+<button onclick="addPlayer()">Añadir</button>
 </div>
 
 <div class="card">
-  <h3>☄️ Resultado del Encuentro</h3>
-  <b>Pareja Alpha</b>
-  <select id="a1"></select>
-  <select id="a2"></select>
-  <b>Pareja Beta</b>
-  <select id="b1"></select>
-  <select id="b2"></select>
-  <button class="btn-win" onclick="processMatch('A')">Victoria para Alpha</button>
-  <button class="btn-win" onclick="processMatch('B')">Victoria para Beta</button>
+<h3>☄️ Resultado del Encuentro (mejor de 3 sets)</h3>
+
+<b>Pareja Alpha</b>
+<select id="a1"></select>
+<select id="a2"></select>
+
+<b>Pareja Beta</b>
+<select id="b1"></select>
+<select id="b2"></select>
+
+<h4>Sets</h4>
+<div>Set 1: <input id="s1a" type="number" placeholder="Alpha"> <input id="s1b" type="number" placeholder="Beta"></div>
+<div>Set 2: <input id="s2a" type="number"> <input id="s2b" type="number"></div>
+<div>Set 3: <input id="s3a" type="number"> <input id="s3b" type="number"></div>
+
+<button class="btn-win" onclick="processMatch()">Cargar Partido</button>
 </div>
 
 <div class="card">
-  <h3>📊 Ranking Galáctico</h3>
-  <table>
-    <thead>
-      <tr>
-        <th>Jugador</th>
-        <th>PJ</th>
-        <th>Pts</th>
-      </tr>
-    </thead>
-    <tbody id="rankingBody"></tbody>
-  </table>
+<h3>📊 Ranking General</h3>
+<table>
+<thead>
+<tr><th>Jugador</th><th>PJ</th><th>Pts</th></tr>
+</thead>
+<tbody id="rankingBody"></tbody>
+</table>
 </div>
 
 <div class="card">
-  <h3>📜 Bitácora de Partidos</h3>
-  <div id="matchHistory"></div>
+<h3>📈 Ranking Estadísticas</h3>
+<table>
+<thead>
+<tr>
+<th>Jugador</th>
+<th>Sets G</th>
+<th>% Sets</th>
+<th>Games G</th>
+<th>% Games</th>
+</tr>
+</thead>
+<tbody id="statsBody"></tbody>
+</table>
 </div>
 
-<button class="btn-danger" onclick="resetData()">Reiniciar Sistema (Borrar Todo)</button>
+<button class="btn-safe" onclick="resetData()">NO TOCAR</button>
 
 <script>
-let players = JSON.parse(localStorage.getItem('orbit_players') || '[]');
-let history = JSON.parse(localStorage.getItem('orbit_history') || '[]');
+let players = JSON.parse(localStorage.getItem('orbit_players')||'[]');
 
-function save() {
-  localStorage.setItem('orbit_players', JSON.stringify(players));
-  localStorage.setItem('orbit_history', JSON.stringify(history));
-  render();
+function save(){
+localStorage.setItem('orbit_players',JSON.stringify(players));
+render();
 }
 
-function addPlayer() {
-  const input = document.getElementById('playerName');
-  const name = input.value.trim();
-  if (!name || players.find(p => p.name === name)) return;
-  // Añadimos 'played' para contar partidos
-  players.push({ name, points: 0, played: 0 });
-  input.value = '';
-  save();
+function addPlayer(){
+const n=document.getElementById('playerName').value.trim();
+if(!n||players.find(p=>p.name===n))return;
+players.push({
+name:n,points:0,played:0,
+setsWon:0,setsPlayed:0,
+gamesWon:0,gamesPlayed:0
+});
+document.getElementById('playerName').value='';
+save();
 }
 
-function processMatch(winnerSide) {
-  const pA1 = document.getElementById('a1').value;
-  const pA2 = document.getElementById('a2').value;
-  const pB1 = document.getElementById('b1').value;
-  const pB2 = document.getElementById('b2').value;
+function processMatch(){
+const A=[a1.value,a2.value];
+const B=[b1.value,b2.value];
+if(new Set([...A,...B]).size!==4){alert("4 jugadores distintos");return;}
 
-  const all = [pA1, pA2, pB1, pB2];
-  if (new Set(all).size !== 4) {
-    alert("Error: Se necesitan 4 jugadores distintos.");
-    return;
-  }
+let sets=[[s1a.value,s1b.value],[s2a.value,s2b.value],[s3a.value,s3b.value]];
+let setWinsA=0,setWinsB=0;
 
-  const winners = winnerSide === 'A' ? [pA1, pA2] : [pB1, pB2];
-  const losers = winnerSide === 'A' ? [pB1, pB2] : [pA1, pA2];
+sets.forEach(s=>{
+if(s[0]===''||s[1]==='')return;
+let ga=parseInt(s[0]),gb=parseInt(s[1]);
+players.forEach(p=>{
+if(A.includes(p.name)){p.gamesWon+=ga;p.gamesPlayed+=ga+gb;}
+if(B.includes(p.name)){p.gamesWon+=gb;p.gamesPlayed+=ga+gb;}
+});
+if(ga>gb)setWinsA++; else setWinsB++;
+});
 
-  // Actualizar estadísticas
-  players.forEach(p => {
-    if (all.includes(p.name)) {
-      p.played += 1; // Sumar partido jugado a los 4
-      if (winners.includes(p.name)) {
-        p.points += 3; // 3 puntos al ganador
-      }
-    }
-  });
+const winners=setWinsA>setWinsB?A:B;
 
-  history.unshift({
-    date: new Date().toLocaleString(),
-    winners: winners.join(" & "),
-    losers: losers.join(" & ")
-  });
-  
-  save();
+players.forEach(p=>{
+if([...A,...B].includes(p.name)){
+p.played++;
+p.setsPlayed+=setWinsA+setWinsB;
+}
+if(winners.includes(p.name)){
+p.points+=3;
+p.setsWon+=Math.max(setWinsA,setWinsB);
+}
+});
+
+save();
 }
 
-function resetData() {
-  if (confirm("¿Confirmas el reinicio total de la base de datos?")) {
-    players = [];
-    history = [];
-    save();
-  }
+function resetData(){
+if(confirm("¿Seguro?")){
+players=[];
+save();
+}
 }
 
-function render() {
-  // Ranking
-  players.sort((a, b) => b.points - a.points);
-  document.getElementById('rankingBody').innerHTML = players.map(p => `
-    <tr>
-      <td>${p.name}</td>
-      <td>${p.played}</td>
-      <td style="color:var(--orbit-primary); font-weight:bold;">${p.points}</td>
-    </tr>
-  `).join('');
+function render(){
+players.sort((a,b)=>b.points-a.points);
+rankingBody.innerHTML=players.map(p=>`
+<tr><td>${p.name}</td><td>${p.played}</td><td>${p.points}</td></tr>`).join('');
 
-  // Historial (últimos 5)
-  document.getElementById('matchHistory').innerHTML = history.slice(0, 5).map(m => `
-    <div class="history-item">
-      <div class="date">${m.date}</div>
-      <div><span class="win-label">WIN:</span> ${m.winners}</div>
-      <div style="color:#666">LOSS: ${m.losers}</div>
-    </div>
-  `).join('') || 'Sin datos de vuelo.';
+statsBody.innerHTML=players.map(p=>{
+let ps=p.setsPlayed?((p.setsWon/p.setsPlayed)*100).toFixed(1):'0';
+let pg=p.gamesPlayed?((p.gamesWon/p.gamesPlayed)*100).toFixed(1):'0';
+return `<tr>
+<td>${p.name}</td>
+<td>${p.setsWon}</td>
+<td>${ps}%</td>
+<td>${p.gamesWon}</td>
+<td>${pg}%</td>
+</tr>`;
+}).join('');
 
-  // Dropdowns
-  ['a1', 'a2', 'b1', 'b2'].forEach(id => {
-    const s = document.getElementById(id);
-    const current = s.value;
-    s.innerHTML = players.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
-    s.value = current;
-  });
+['a1','a2','b1','b2'].forEach(id=>{
+document.getElementById(id).innerHTML=players.map(p=>`<option>${p.name}</option>`).join('');
+});
 }
-
 render();
 </script>
 </body>
 </html>
-

@@ -1,258 +1,97 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>ORBIT Paddle</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    :root { 
-      --orbit-primary: #00f2ff;
-      --orbit-secondary: #7000ff;
-      --orbit-bg: #0a0b10; 
-      --orbit-card: #161b22;
-      --text: #ffffff;
-    }
-    body { font-family: 'Segoe UI', Roboto, sans-serif; padding: 20px; background: var(--orbit-bg); color: var(--text); max-width: 800px; margin: auto; }
-    h1 { text-align: center; color: var(--orbit-primary); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px var(--orbit-primary); }
-    h3 { color: var(--orbit-secondary); border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 0; }
-    
-    input, button, select { padding: 12px; margin: 8px 0; width: 100%; border-radius: 8px; border: 1px solid #30363d; box-sizing: border-box; font-size: 16px; background: #0d1117; color: white; }
-    
-    .grid-sets { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 10px 0; }
-    .set-input { text-align: center; border-color: var(--orbit-secondary); }
-    
-    button { background: linear-gradient(45deg, var(--orbit-secondary), #4b00ad); color: white; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; }
-    button:active { transform: scale(0.98); }
-    .btn-win { background: linear-gradient(45deg, var(--orbit-primary), #00a2ad); color: #000; margin-top: 15px; }
-    .btn-danger { background: #2d0000; color: #ff4d4d; border: 1px solid #4d0000; margin-top: 40px; font-size: 0.8em; }
-
-    .card { background: var(--orbit-card); padding: 20px; border-radius: 16px; margin-bottom: 25px; border: 1px solid #30363d; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-    
-    .ranking-container { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; min-width: 400px; }
-    th, td { padding: 12px; border-bottom: 1px solid #30363d; text-align: center; }
-    th { color: var(--orbit-primary); font-size: 0.75em; text-transform: uppercase; }
-    .pct { color: #8b949e; font-size: 0.85em; font-italic: italic; }
-    
-    .history-item { font-size: 0.85em; border-bottom: 1px solid #30363d; padding: 12px 0; }
-    .date { color: #6e7681; font-size: 0.75em; }
-    .win-label { color: var(--orbit-primary); font-weight: bold; }
-    
-    .team-label { font-size: 0.9em; color: #8b949e; display: block; margin-top: 10px; }
-  </style>
+<meta charset="UTF-8">
+<title>ORBIT Paddle PRO</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{background:#0a0b10;color:white;font-family:Segoe UI;padding:20px;max-width:900px;margin:auto}
+h1,h2{color:#00f2ff;text-align:center}
+.card{background:#161b22;padding:15px;border-radius:12px;margin-bottom:20px}
+input,select,button{width:100%;padding:10px;margin:6px 0;border-radius:8px;background:#0d1117;color:white;border:1px solid #333}
+button{background:#00f2ff;color:black;font-weight:bold}
+table{width:100%;border-collapse:collapse}
+th,td{padding:8px;border-bottom:1px solid #333;text-align:center}
+th{color:#00f2ff;font-size:0.8em}
+.pct{color:#aaa}
+</style>
 </head>
 <body>
 
-<h1>ORBIT Paddle</h1>
+<h1>ORBIT Paddle PRO</h1>
 
 <div class="card">
-  <h3>🚀 Registro de Jugador</h3>
-  <input id="playerName" placeholder="Nombre del astronauta..." onkeypress="if(event.key==='Enter') addPlayer()">
-  <button onclick="addPlayer()">Agregar nuevo jugador</button>
+<input id="playerName" placeholder="Nuevo jugador">
+<button onclick="addPlayer()">Agregar</button>
 </div>
 
 <div class="card">
-  <h3>☄️ Registrar Partido</h3>
-  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-    <div>
-      <span class="team-label">PAREJA ALPHA</span>
-      <select id="a1"></select>
-      <select id="a2"></select>
-    </div>
-    <div>
-      <span class="team-label">PAREJA BETA</span>
-      <select id="b1"></select>
-      <select id="b2"></select>
-    </div>
-  </div>
-
-  <div style="margin-top: 15px;">
-    <span class="team-label" style="text-align: center;">RESULTADOS (Alpha - Beta)</span>
-    <div class="grid-sets">
-      <input type="number" id="s1a" class="set-input" placeholder="Set 1 A">
-      <input type="number" id="s2a" class="set-input" placeholder="Set 2 A">
-      <input type="number" id="s3a" class="set-input" placeholder="Set 3 A">
-      <input type="number" id="s1b" class="set-input" placeholder="Set 1 B">
-      <input type="number" id="s2b" class="set-input" placeholder="Set 2 B">
-      <input type="number" id="s3b" class="set-input" placeholder="Set 3 B">
-    </div>
-  </div>
-  
-  <button class="btn-win" onclick="processMatch()">Registrar Misión</button>
+<h3>Partido</h3>
+<select id="a1"></select><select id="a2"></select>
+<select id="b1"></select><select id="b2"></select>
+<input id="s1a" type="number" placeholder="Set1 A">
+<input id="s1b" type="number" placeholder="Set1 B">
+<input id="s2a" type="number" placeholder="Set2 A">
+<input id="s2b" type="number" placeholder="Set2 B">
+<input id="s3a" type="number" placeholder="Set3 A">
+<input id="s3b" type="number" placeholder="Set3 B">
+<button onclick="processMatch()">Registrar</button>
 </div>
 
-<h2 style="text-align: center; color: var(--orbit-primary);">RANKING OFICIAL</h2>
-
-<div class="card">
-  <h3>🏆 Por Puntos</h3>
-  <div class="ranking-container">
-    <table>
-      <thead>
-        <tr><th>Jugador</th><th>PJ</th><th>Pts</th></tr>
-      </thead>
-      <tbody id="rankPoints"></tbody>
-    </table>
-  </div>
-</div>
-
-<div class="card">
-  <h3>🎾 Por Sets</h3>
-  <div class="ranking-container">
-    <table>
-      <thead>
-        <tr><th>Jugador</th><th>Ganados</th><th>Totales</th><th>% Eficacia</th></tr>
-      </thead>
-      <tbody id="rankSets"></tbody>
-    </table>
-  </div>
-</div>
-
-<div class="card">
-  <h3>🔥 Por Games</h3>
-  <div class="ranking-container">
-    <table>
-      <thead>
-        <tr><th>Jugador</th><th>Ganados</th><th>Totales</th><th>% Eficacia</th></tr>
-      </thead>
-      <tbody id="rankGames"></tbody>
-    </table>
-  </div>
-</div>
-
-<div class="card">
-  <h3>📜 Bitácora de Partidos</h3>
-  <div id="matchHistory"></div>
-</div>
-
-<button class="btn-danger" onclick="resetData()">COMPRAR AHORA</button>
+<div class="card"><h3>Ranking Puntos</h3><table><thead><tr><th>Jugador</th><th>PJ</th><th>Pts</th><th>Racha</th></tr></thead><tbody id="rankPoints"></tbody></table></div>
+<div class="card"><h3>Ranking Sets</h3><table><thead><tr><th>Jugador</th><th>Gan</th><th>Tot</th><th>%</th></tr></thead><tbody id="rankSets"></tbody></table></div>
+<div class="card"><h3>Ranking Games</h3><table><thead><tr><th>Jugador</th><th>Gan</th><th>Tot</th><th>%</th><th>Avg</th></tr></thead><tbody id="rankGames"></tbody></table></div>
+<div class="card"><h3>Ranking Parejas</h3><table><thead><tr><th>Pareja</th><th>PJ</th><th>PG</th><th>%</th></tr></thead><tbody id="rankPairs"></tbody></table></div>
 
 <script>
-let players = JSON.parse(localStorage.getItem('orbit_players') || '[]');
-let history = JSON.parse(localStorage.getItem('orbit_history') || '[]');
+let players=JSON.parse(localStorage.getItem("players")||"[]");
+let pairs=JSON.parse(localStorage.getItem("pairs")||"{}");
 
-function save() {
-  localStorage.setItem('orbit_players', JSON.stringify(players));
-  localStorage.setItem('orbit_history', JSON.stringify(history));
-  render();
+function save(){localStorage.setItem("players",JSON.stringify(players));localStorage.setItem("pairs",JSON.stringify(pairs));render();}
+function addPlayer(){
+ let n=playerName.value.trim();
+ if(!n||players.find(p=>p.name==n))return;
+ players.push({name:n,points:0,played:0,setsWin:0,setsTotal:0,gamesWin:0,gamesTotal:0,streak:0,best:0});
+ playerName.value="";save();
 }
 
-function addPlayer() {
-  const input = document.getElementById('playerName');
-  const name = input.value.trim();
-  if (!name || players.find(p => p.name.toLowerCase() === name.toLowerCase())) return;
-  
-  players.push({ 
-    name, 
-    points: 0, 
-    played: 0,
-    setsWin: 0,
-    setsTotal: 0,
-    gamesWin: 0,
-    gamesTotal: 0
-  });
-  input.value = '';
-  save();
+function processMatch(){
+ let A=[a1.value,a2.value],B=[b1.value,b2.value];
+ if(new Set([...A,...B]).size<4)return alert("Jugadores inválidos");
+ let sA=0,sB=0,gA=0,gB=0;
+ [[s1a,s1b],[s2a,s2b],[s3a,s3b]].forEach((s,i)=>{
+ let a=parseInt(s[0].value||0),b=parseInt(s[1].value||0);
+ if(i==2&&a==0&&b==0)return;
+ gA+=a;gB+=b;if(a>b)sA++;else sB++;
+ });
+ let winA=sA>sB;
+ players.forEach(p=>{
+ let inA=A.includes(p.name),inB=B.includes(p.name);
+ if(!inA&&!inB)return;
+ p.played++;
+ let win=(inA&&winA)||(inB&&!winA);
+ p.points+=win?3:1;
+ p.streak=win?p.streak+1:0;
+ p.best=Math.max(p.best,p.streak);
+ p.setsWin+=inA?sA:sB;
+ p.setsTotal+=sA+sB;
+ p.gamesWin+=inA?gA:gB;
+ p.gamesTotal+=gA+gB;
+ });
+ let key=[...A].sort().join("&");pairs[key]=pairs[key]||{pj:0,pg:0};pairs[key].pj++;if(winA)pairs[key].pg++;
+ key=[...B].sort().join("&");pairs[key]=pairs[key]||{pj:0,pg:0};pairs[key].pj++;if(!winA)pairs[key].pg++;
+ ["s1a","s1b","s2a","s2b","s3a","s3b"].forEach(i=>document.getElementById(i).value="");save();
 }
 
-function processMatch() {
-  const pA = [document.getElementById('a1').value, document.getElementById('a2').value];
-  const pB = [document.getElementById('b1').value, document.getElementById('b2').value];
-  const allNames = [...pA, ...pB];
-
-  if (new Set(allNames).size !== 4 || allNames.includes("")) {
-    alert("Selecciona 4 jugadores distintos."); return;
-  }
-
-  const scores = [
-    [parseInt(document.getElementById('s1a').value || 0), parseInt(document.getElementById('s1b').value || 0)],
-    [parseInt(document.getElementById('s2a').value || 0), parseInt(document.getElementById('s2b').value || 0)],
-    [parseInt(document.getElementById('s3a').value || 0), parseInt(document.getElementById('s3b').value || 0)]
-  ];
-
-  let setsA = 0, setsB = 0, gamesA = 0, gamesB = 0, setsPlayed = 0;
-
-  scores.forEach(([a, b], index) => {
-    if (a === 0 && b === 0 && index > 1) return; // Set 3 no jugado
-    setsPlayed++;
-    gamesA += a; gamesB += b;
-    if (a > b) setsA++; else if (b > a) setsB++;
-  });
-
-  const winA = setsA > setsB;
-  const winners = winA ? pA : pB;
-  const losers = winA ? pB : pA;
-
-  players.forEach(p => {
-    if (pA.includes(p.name)) {
-      p.played++;
-      p.points += winA ? 3 : 0;
-      p.setsWin += setsA;
-      p.setsTotal += setsPlayed;
-      p.gamesWin += gamesA;
-      p.gamesTotal += (gamesA + gamesB);
-    }
-    if (pB.includes(p.name)) {
-      p.played++;
-      p.points += !winA ? 3 : 0;
-      p.setsWin += setsB;
-      p.setsTotal += setsPlayed;
-      p.gamesWin += gamesB;
-      p.gamesTotal += (gamesA + gamesB);
-    }
-  });
-
-  history.unshift({
-    date: new Date().toLocaleString(),
-    res: `${setsA}-${setsB}`,
-    winners: winners.join(" & "),
-    losers: losers.join(" & ")
-  });
-
-  // Limpiar inputs
-  ['s1a','s2a','s3a','s1b','s2b','s3b'].forEach(id => document.getElementById(id).value = '');
-  save();
+function render(){
+ let pct=(w,t)=>t?((w/t)*100).toFixed(1)+"%":"0%";
+ rankPoints.innerHTML=[...players].sort((a,b)=>b.points-a.points).map(p=>`<tr><td>${p.name}</td><td>${p.played}</td><td>${p.points}</td><td>🔥${p.streak}</td></tr>`).join("");
+ rankSets.innerHTML=[...players].sort((a,b)=>(b.setsWin/b.setsTotal)-(a.setsWin/a.setsTotal)).map(p=>`<tr><td>${p.name}</td><td>${p.setsWin}</td><td>${p.setsTotal}</td><td class=pct>${pct(p.setsWin,p.setsTotal)}</td></tr>`).join("");
+ rankGames.innerHTML=[...players].sort((a,b)=>(b.gamesWin/b.gamesTotal)-(a.gamesWin/a.gamesTotal)).map(p=>`<tr><td>${p.name}</td><td>${p.gamesWin}</td><td>${p.gamesTotal}</td><td class=pct>${pct(p.gamesWin,p.gamesTotal)}</td><td>${(p.gamesTotal/p.played||0).toFixed(1)}</td></tr>`).join("");
+ rankPairs.innerHTML=Object.entries(pairs).sort((a,b)=>(b[1].pg/b[1].pj)-(a[1].pg/a[1].pj)).map(p=>`<tr><td>${p[0]}</td><td>${p[1].pj}</td><td>${p[1].pg}</td><td class=pct>${pct(p[1].pg,p[1].pj)}</td></tr>`).join("");
+ [a1,a2,b1,b2].forEach(s=>{let v=s.value;s.innerHTML='<option></option>'+players.map(p=>`<option>${p.name}</option>`).join("");s.value=v});
 }
-
-function render() {
-  const calcPct = (w, t) => t === 0 ? "0%" : ((w / t) * 100).toFixed(1) + "%";
-
-  // Ranking Puntos
-  const sortPoints = [...players].sort((a, b) => b.points - a.points);
-  document.getElementById('rankPoints').innerHTML = sortPoints.map(p => 
-    `<tr><td>${p.name}</td><td>${p.played}</td><td style="color:var(--orbit-primary);font-weight:bold">${p.points}</td></tr>`).join('');
-
-  // Ranking Sets
-  const sortSets = [...players].sort((a, b) => (b.setsWin/b.setsTotal || 0) - (a.setsWin/a.setsTotal || 0));
-  document.getElementById('rankSets').innerHTML = sortSets.map(p => 
-    `<tr><td>${p.name}</td><td>${p.setsWin}</td><td>${p.setsTotal}</td><td class="pct">${calcPct(p.setsWin, p.setsTotal)}</td></tr>`).join('');
-
-  // Ranking Games
-  const sortGames = [...players].sort((a, b) => (b.gamesWin/b.gamesTotal || 0) - (a.gamesWin/a.gamesTotal || 0));
-  document.getElementById('rankGames').innerHTML = sortGames.map(p => 
-    `<tr><td>${p.name}</td><td>${p.gamesWin}</td><td>${p.gamesTotal}</td><td class="pct">${calcPct(p.gamesWin, p.gamesTotal)}</td></tr>`).join('');
-
-  // Historial y Selects
-  document.getElementById('matchHistory').innerHTML = history.slice(0, 5).map(m => `
-    <div class="history-item">
-      <div class="date">${m.date} | Resultado: ${m.res}</div>
-      <div><span class="win-label">WIN:</span> ${m.winners}</div>
-      <div style="color:#666">LOSS: ${m.losers}</div>
-    </div>`).join('') || 'Sin datos.';
-
-  ['a1', 'a2', 'b1', 'b2'].forEach(id => {
-    const s = document.getElementById(id);
-    const val = s.value;
-    s.innerHTML = '<option value="">-- Jugador --</option>' + players.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
-    s.value = val;
-  });
-}
-
-function resetData() {
-  if (confirm("¿Reiniciar sistema?")) { players = []; history = []; save(); }
-}
-
 render();
 </script>
 </body>
 </html>
-

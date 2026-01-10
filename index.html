@@ -12,26 +12,33 @@
       --orbit-card: #161b22;
       --text: #ffffff;
     }
-    body { font-family: 'Segoe UI', Roboto, sans-serif; padding: 20px; background: var(--orbit-bg); color: var(--text); max-width: 600px; margin: auto; }
+    body { font-family: 'Segoe UI', Roboto, sans-serif; padding: 20px; background: var(--orbit-bg); color: var(--text); max-width: 800px; margin: auto; }
     h1 { text-align: center; color: var(--orbit-primary); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px var(--orbit-primary); }
-    h3 { color: var(--orbit-secondary); border-bottom: 1px solid #333; padding-bottom: 5px; }
+    h3 { color: var(--orbit-secondary); border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 0; }
     
-    input, button, select { padding: 12px; margin: 8px 0; width: 100%; border-radius: 8px; border: 1px solid #333; box-sizing: border-box; font-size: 16px; background: #0d1117; color: white; }
+    input, button, select { padding: 12px; margin: 8px 0; width: 100%; border-radius: 8px; border: 1px solid #30363d; box-sizing: border-box; font-size: 16px; background: #0d1117; color: white; }
+    
+    .grid-sets { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 10px 0; }
+    .set-input { text-align: center; border-color: var(--orbit-secondary); }
     
     button { background: linear-gradient(45deg, var(--orbit-secondary), #4b00ad); color: white; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; }
     button:active { transform: scale(0.98); }
-    .btn-win { background: linear-gradient(45deg, var(--orbit-primary), #00a2ad); color: #000; }
-    .btn-danger { background: #2d0000; color: #ff4d4d; border: 1px solid #4d0000; margin-top: 30px; }
+    .btn-win { background: linear-gradient(45deg, var(--orbit-primary), #00a2ad); color: #000; margin-top: 15px; }
+    .btn-danger { background: #2d0000; color: #ff4d4d; border: 1px solid #4d0000; margin-top: 40px; font-size: 0.8em; }
 
-    .card { background: var(--orbit-card); padding: 20px; border-radius: 16px; margin-bottom: 20px; border: 1px solid #30363d; }
+    .card { background: var(--orbit-card); padding: 20px; border-radius: 16px; margin-bottom: 25px; border: 1px solid #30363d; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
     
-    table { width: 100%; border-collapse: collapse; }
+    .ranking-container { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; min-width: 400px; }
     th, td { padding: 12px; border-bottom: 1px solid #30363d; text-align: center; }
-    th { color: var(--orbit-primary); font-size: 0.8em; text-transform: uppercase; }
+    th { color: var(--orbit-primary); font-size: 0.75em; text-transform: uppercase; }
+    .pct { color: #8b949e; font-size: 0.85em; font-italic: italic; }
     
     .history-item { font-size: 0.85em; border-bottom: 1px solid #30363d; padding: 12px 0; }
     .date { color: #6e7681; font-size: 0.75em; }
     .win-label { color: var(--orbit-primary); font-weight: bold; }
+    
+    .team-label { font-size: 0.9em; color: #8b949e; display: block; margin-top: 10px; }
   </style>
 </head>
 <body>
@@ -41,33 +48,75 @@
 <div class="card">
   <h3>🚀 Registro de Jugador</h3>
   <input id="playerName" placeholder="Nombre del astronauta..." onkeypress="if(event.key==='Enter') addPlayer()">
-  <button onclick="addPlayer()">Añadir a la Misión</button>
+  <button onclick="addPlayer()">Agregar nuevo jugador</button>
 </div>
 
 <div class="card">
-  <h3>☄️ Resultado del Encuentro</h3>
-  <b>Pareja Alpha</b>
-  <select id="a1"></select>
-  <select id="a2"></select>
-  <b>Pareja Beta</b>
-  <select id="b1"></select>
-  <select id="b2"></select>
-  <button class="btn-win" onclick="processMatch('A')">Victoria para Alpha</button>
-  <button class="btn-win" onclick="processMatch('B')">Victoria para Beta</button>
+  <h3>☄️ Registrar Partido</h3>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+    <div>
+      <span class="team-label">PAREJA ALPHA</span>
+      <select id="a1"></select>
+      <select id="a2"></select>
+    </div>
+    <div>
+      <span class="team-label">PAREJA BETA</span>
+      <select id="b1"></select>
+      <select id="b2"></select>
+    </div>
+  </div>
+
+  <div style="margin-top: 15px;">
+    <span class="team-label" style="text-align: center;">RESULTADOS (Alpha - Beta)</span>
+    <div class="grid-sets">
+      <input type="number" id="s1a" class="set-input" placeholder="Set 1 A">
+      <input type="number" id="s2a" class="set-input" placeholder="Set 2 A">
+      <input type="number" id="s3a" class="set-input" placeholder="Set 3 A">
+      <input type="number" id="s1b" class="set-input" placeholder="Set 1 B">
+      <input type="number" id="s2b" class="set-input" placeholder="Set 2 B">
+      <input type="number" id="s3b" class="set-input" placeholder="Set 3 B">
+    </div>
+  </div>
+  
+  <button class="btn-win" onclick="processMatch()">Registrar Misión</button>
+</div>
+
+<h2 style="text-align: center; color: var(--orbit-primary);">RANKING OFICIAL</h2>
+
+<div class="card">
+  <h3>🏆 Por Puntos</h3>
+  <div class="ranking-container">
+    <table>
+      <thead>
+        <tr><th>Jugador</th><th>PJ</th><th>Pts</th></tr>
+      </thead>
+      <tbody id="rankPoints"></tbody>
+    </table>
+  </div>
 </div>
 
 <div class="card">
-  <h3>📊 Ranking Galáctico</h3>
-  <table>
-    <thead>
-      <tr>
-        <th>Jugador</th>
-        <th>PJ</th>
-        <th>Pts</th>
-      </tr>
-    </thead>
-    <tbody id="rankingBody"></tbody>
-  </table>
+  <h3>🎾 Por Sets</h3>
+  <div class="ranking-container">
+    <table>
+      <thead>
+        <tr><th>Jugador</th><th>Ganados</th><th>Totales</th><th>% Eficacia</th></tr>
+      </thead>
+      <tbody id="rankSets"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <h3>🔥 Por Games</h3>
+  <div class="ranking-container">
+    <table>
+      <thead>
+        <tr><th>Jugador</th><th>Ganados</th><th>Totales</th><th>% Eficacia</th></tr>
+      </thead>
+      <tbody id="rankGames"></tbody>
+    </table>
+  </div>
 </div>
 
 <div class="card">
@@ -75,7 +124,7 @@
   <div id="matchHistory"></div>
 </div>
 
-<button class="btn-danger" onclick="resetData()">Reiniciar Sistema (Borrar Todo)</button>
+<button class="btn-danger" onclick="resetData()">COMPRAR AHORA</button>
 
 <script>
 let players = JSON.parse(localStorage.getItem('orbit_players') || '[]');
@@ -90,95 +139,118 @@ function save() {
 function addPlayer() {
   const input = document.getElementById('playerName');
   const name = input.value.trim();
-  if (!name) return;
-  if (players.find(p => p.name.toLowerCase() === name.toLowerCase())) {
-    alert("Este astronauta ya está en la lista.");
-    return;
-  }
-  players.push({ name, points: 0, played: 0 });
+  if (!name || players.find(p => p.name.toLowerCase() === name.toLowerCase())) return;
+  
+  players.push({ 
+    name, 
+    points: 0, 
+    played: 0,
+    setsWin: 0,
+    setsTotal: 0,
+    gamesWin: 0,
+    gamesTotal: 0
+  });
   input.value = '';
   save();
 }
 
-function processMatch(winnerSide) {
-  const pA1 = document.getElementById('a1').value;
-  const pA2 = document.getElementById('a2').value;
-  const pB1 = document.getElementById('b1').value;
-  const pB2 = document.getElementById('b2').value;
+function processMatch() {
+  const pA = [document.getElementById('a1').value, document.getElementById('a2').value];
+  const pB = [document.getElementById('b1').value, document.getElementById('b2').value];
+  const allNames = [...pA, ...pB];
 
-  const all = [pA1, pA2, pB1, pB2];
-  
-  // Validación de selección completa y jugadores únicos
-  if (all.some(v => v === "")) {
-    alert("Por favor, selecciona a los 4 jugadores.");
-    return;
-  }
-  if (new Set(all).size !== 4) {
-    alert("Error: No puedes repetir jugadores en el mismo partido.");
-    return;
+  if (new Set(allNames).size !== 4 || allNames.includes("")) {
+    alert("Selecciona 4 jugadores distintos."); return;
   }
 
-  const winners = winnerSide === 'A' ? [pA1, pA2] : [pB1, pB2];
-  const losers = winnerSide === 'A' ? [pB1, pB2] : [pA1, pA2];
+  const scores = [
+    [parseInt(document.getElementById('s1a').value || 0), parseInt(document.getElementById('s1b').value || 0)],
+    [parseInt(document.getElementById('s2a').value || 0), parseInt(document.getElementById('s2b').value || 0)],
+    [parseInt(document.getElementById('s3a').value || 0), parseInt(document.getElementById('s3b').value || 0)]
+  ];
+
+  let setsA = 0, setsB = 0, gamesA = 0, gamesB = 0, setsPlayed = 0;
+
+  scores.forEach(([a, b], index) => {
+    if (a === 0 && b === 0 && index > 1) return; // Set 3 no jugado
+    setsPlayed++;
+    gamesA += a; gamesB += b;
+    if (a > b) setsA++; else if (b > a) setsB++;
+  });
+
+  const winA = setsA > setsB;
+  const winners = winA ? pA : pB;
+  const losers = winA ? pB : pA;
 
   players.forEach(p => {
-    if (all.includes(p.name)) {
-      p.played += 1;
-      if (winners.includes(p.name)) {
-        p.points += 3;
-      }
+    if (pA.includes(p.name)) {
+      p.played++;
+      p.points += winA ? 3 : 0;
+      p.setsWin += setsA;
+      p.setsTotal += setsPlayed;
+      p.gamesWin += gamesA;
+      p.gamesTotal += (gamesA + gamesB);
+    }
+    if (pB.includes(p.name)) {
+      p.played++;
+      p.points += !winA ? 3 : 0;
+      p.setsWin += setsB;
+      p.setsTotal += setsPlayed;
+      p.gamesWin += gamesB;
+      p.gamesTotal += (gamesA + gamesB);
     }
   });
 
   history.unshift({
-    date: new Date().toLocaleString('es-ES', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' }),
+    date: new Date().toLocaleString(),
+    res: `${setsA}-${setsB}`,
     winners: winners.join(" & "),
     losers: losers.join(" & ")
   });
-  
+
+  // Limpiar inputs
+  ['s1a','s2a','s3a','s1b','s2b','s3b'].forEach(id => document.getElementById(id).value = '');
   save();
 }
 
-function resetData() {
-  if (confirm("¿Seguro que quieres borrar toda la base de datos galáctica?")) {
-    players = [];
-    history = [];
-    save();
-  }
-}
-
 function render() {
-  // Ranking: Ordenar por puntos, luego por partidos jugados (menos es mejor)
-  players.sort((a, b) => b.points - a.points || a.played - b.played);
-  
-  document.getElementById('rankingBody').innerHTML = players.map(p => `
-    <tr>
-      <td>${p.name}</td>
-      <td>${p.played}</td>
-      <td style="color:var(--orbit-primary); font-weight:bold;">${p.points}</td>
-    </tr>
-  `).join('');
+  const calcPct = (w, t) => t === 0 ? "0%" : ((w / t) * 100).toFixed(1) + "%";
 
+  // Ranking Puntos
+  const sortPoints = [...players].sort((a, b) => b.points - a.points);
+  document.getElementById('rankPoints').innerHTML = sortPoints.map(p => 
+    `<tr><td>${p.name}</td><td>${p.played}</td><td style="color:var(--orbit-primary);font-weight:bold">${p.points}</td></tr>`).join('');
+
+  // Ranking Sets
+  const sortSets = [...players].sort((a, b) => (b.setsWin/b.setsTotal || 0) - (a.setsWin/a.setsTotal || 0));
+  document.getElementById('rankSets').innerHTML = sortSets.map(p => 
+    `<tr><td>${p.name}</td><td>${p.setsWin}</td><td>${p.setsTotal}</td><td class="pct">${calcPct(p.setsWin, p.setsTotal)}</td></tr>`).join('');
+
+  // Ranking Games
+  const sortGames = [...players].sort((a, b) => (b.gamesWin/b.gamesTotal || 0) - (a.gamesWin/a.gamesTotal || 0));
+  document.getElementById('rankGames').innerHTML = sortGames.map(p => 
+    `<tr><td>${p.name}</td><td>${p.gamesWin}</td><td>${p.gamesTotal}</td><td class="pct">${calcPct(p.gamesWin, p.gamesTotal)}</td></tr>`).join('');
+
+  // Historial y Selects
   document.getElementById('matchHistory').innerHTML = history.slice(0, 5).map(m => `
     <div class="history-item">
-      <div class="date">${m.date}</div>
+      <div class="date">${m.date} | Resultado: ${m.res}</div>
       <div><span class="win-label">WIN:</span> ${m.winners}</div>
-      <div style="color:#888">LOSS: ${m.losers}</div>
-    </div>
-  `).join('') || '<div style="text-align:center; padding:10px; color:#666;">Sin datos de vuelo.</div>';
+      <div style="color:#666">LOSS: ${m.losers}</div>
+    </div>`).join('') || 'Sin datos.';
 
-  // Actualizar Dropdowns manteniendo la selección si es posible
   ['a1', 'a2', 'b1', 'b2'].forEach(id => {
     const s = document.getElementById(id);
-    const current = s.value;
-    let options = '<option value="" disabled selected>Seleccionar...</option>';
-    options += players.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
-    s.innerHTML = options;
-    s.value = current;
+    const val = s.value;
+    s.innerHTML = '<option value="">-- Jugador --</option>' + players.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
+    s.value = val;
   });
 }
 
-// Render inicial
+function resetData() {
+  if (confirm("¿Reiniciar sistema?")) { players = []; history = []; save(); }
+}
+
 render();
 </script>
 </body>

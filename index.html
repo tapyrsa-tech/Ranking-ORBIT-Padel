@@ -10,6 +10,7 @@ h1,h2{color:#00f2ff;text-align:center}
 .card{background:#161b22;padding:15px;border-radius:12px;margin-bottom:20px}
 input,select,button{width:100%;padding:10px;margin:6px 0;border-radius:8px;background:#0d1117;color:white;border:1px solid #333}
 button{background:#00f2ff;color:black;font-weight:bold}
+.resetBtn{background:#ff3b3b;color:white}
 table{width:100%;border-collapse:collapse}
 th,td{padding:8px;border-bottom:1px solid #333;text-align:center}
 th{color:#00f2ff;font-size:0.8em}
@@ -38,59 +39,132 @@ th{color:#00f2ff;font-size:0.8em}
 <button onclick="processMatch()">Registrar</button>
 </div>
 
+<div class="card">
+<button class="resetBtn" onclick="resetDatabase()">🔐 Resetear Ranking</button>
+</div>
+
 <div class="card"><h3>Ranking Puntos</h3><table><thead><tr><th>Jugador</th><th>PJ</th><th>Pts</th><th>Racha</th></tr></thead><tbody id="rankPoints"></tbody></table></div>
 <div class="card"><h3>Ranking Sets</h3><table><thead><tr><th>Jugador</th><th>Gan</th><th>Tot</th><th>%</th></tr></thead><tbody id="rankSets"></tbody></table></div>
 <div class="card"><h3>Ranking Games</h3><table><thead><tr><th>Jugador</th><th>Gan</th><th>Tot</th><th>%</th><th>Avg</th></tr></thead><tbody id="rankGames"></tbody></table></div>
 <div class="card"><h3>Ranking Parejas</h3><table><thead><tr><th>Pareja</th><th>PJ</th><th>PG</th><th>%</th></tr></thead><tbody id="rankPairs"></tbody></table></div>
 
 <script>
+
+// 🔐 CAMBIAR ESTE PIN SI QUERÉS
+const ADMIN_PIN = "1234";
+
 let players=JSON.parse(localStorage.getItem("players")||"[]");
 let pairs=JSON.parse(localStorage.getItem("pairs")||"{}");
 
-function save(){localStorage.setItem("players",JSON.stringify(players));localStorage.setItem("pairs",JSON.stringify(pairs));render();}
+function save(){
+ localStorage.setItem("players",JSON.stringify(players));
+ localStorage.setItem("pairs",JSON.stringify(pairs));
+ render();
+}
+
 function addPlayer(){
  let n=playerName.value.trim();
  if(!n||players.find(p=>p.name==n))return;
  players.push({name:n,points:0,played:0,setsWin:0,setsTotal:0,gamesWin:0,gamesTotal:0,streak:0,best:0});
- playerName.value="";save();
+ playerName.value="";
+ save();
 }
 
 function processMatch(){
  let A=[a1.value,a2.value],B=[b1.value,b2.value];
  if(new Set([...A,...B]).size<4)return alert("Jugadores inválidos");
+
  let sA=0,sB=0,gA=0,gB=0;
+
  [[s1a,s1b],[s2a,s2b],[s3a,s3b]].forEach((s,i)=>{
- let a=parseInt(s[0].value||0),b=parseInt(s[1].value||0);
- if(i==2&&a==0&&b==0)return;
- gA+=a;gB+=b;if(a>b)sA++;else sB++;
+  let a=parseInt(s[0].value||0),b=parseInt(s[1].value||0);
+  if(i==2&&a==0&&b==0)return;
+  gA+=a;gB+=b;
+  if(a>b)sA++;else sB++;
  });
+
  let winA=sA>sB;
+
  players.forEach(p=>{
- let inA=A.includes(p.name),inB=B.includes(p.name);
- if(!inA&&!inB)return;
- p.played++;
- let win=(inA&&winA)||(inB&&!winA);
- p.points+=win?3:1;
- p.streak=win?p.streak+1:0;
- p.best=Math.max(p.best,p.streak);
- p.setsWin+=inA?sA:sB;
- p.setsTotal+=sA+sB;
- p.gamesWin+=inA?gA:gB;
- p.gamesTotal+=gA+gB;
+  let inA=A.includes(p.name),inB=B.includes(p.name);
+  if(!inA&&!inB)return;
+
+  p.played++;
+  let win=(inA&&winA)||(inB&&!winA);
+
+  p.points+=win?3:1;
+  p.streak=win?p.streak+1:0;
+  p.best=Math.max(p.best,p.streak);
+  p.setsWin+=inA?sA:sB;
+  p.setsTotal+=sA+sB;
+  p.gamesWin+=inA?gA:gB;
+  p.gamesTotal+=gA+gB;
  });
- let key=[...A].sort().join("&");pairs[key]=pairs[key]||{pj:0,pg:0};pairs[key].pj++;if(winA)pairs[key].pg++;
- key=[...B].sort().join("&");pairs[key]=pairs[key]||{pj:0,pg:0};pairs[key].pj++;if(!winA)pairs[key].pg++;
- ["s1a","s1b","s2a","s2b","s3a","s3b"].forEach(i=>document.getElementById(i).value="");save();
+
+ let key=[...A].sort().join("&");
+ pairs[key]=pairs[key]||{pj:0,pg:0};
+ pairs[key].pj++;
+ if(winA)pairs[key].pg++;
+
+ key=[...B].sort().join("&");
+ pairs[key]=pairs[key]||{pj:0,pg:0};
+ pairs[key].pj++;
+ if(!winA)pairs[key].pg++;
+
+ ["s1a","s1b","s2a","s2b","s3a","s3b"].forEach(i=>document.getElementById(i).value="");
+
+ save();
+}
+
+function resetDatabase(){
+ let pin=prompt("Ingresá el PIN para resetear el ranking:");
+
+ if(pin===null) return;
+
+ if(pin!==ADMIN_PIN){
+  alert("PIN incorrecto. No se puede resetear.");
+  return;
+ }
+
+ if(!confirm("Confirmación final: se eliminarán TODOS los jugadores y partidos.")) return;
+
+ localStorage.removeItem("players");
+ localStorage.removeItem("pairs");
+
+ players=[];
+ pairs={};
+
+ render();
+
+ alert("Ranking reiniciado correctamente.");
 }
 
 function render(){
  let pct=(w,t)=>t?((w/t)*100).toFixed(1)+"%":"0%";
- rankPoints.innerHTML=[...players].sort((a,b)=>b.points-a.points).map(p=>`<tr><td>${p.name}</td><td>${p.played}</td><td>${p.points}</td><td>🔥${p.streak}</td></tr>`).join("");
- rankSets.innerHTML=[...players].sort((a,b)=>(b.setsWin/b.setsTotal)-(a.setsWin/a.setsTotal)).map(p=>`<tr><td>${p.name}</td><td>${p.setsWin}</td><td>${p.setsTotal}</td><td class=pct>${pct(p.setsWin,p.setsTotal)}</td></tr>`).join("");
- rankGames.innerHTML=[...players].sort((a,b)=>(b.gamesWin/b.gamesTotal)-(a.gamesWin/a.gamesTotal)).map(p=>`<tr><td>${p.name}</td><td>${p.gamesWin}</td><td>${p.gamesTotal}</td><td class=pct>${pct(p.gamesWin,p.gamesTotal)}</td><td>${(p.gamesTotal/p.played||0).toFixed(1)}</td></tr>`).join("");
- rankPairs.innerHTML=Object.entries(pairs).sort((a,b)=>(b[1].pg/b[1].pj)-(a[1].pg/a[1].pj)).map(p=>`<tr><td>${p[0]}</td><td>${p[1].pj}</td><td>${p[1].pg}</td><td class=pct>${pct(p[1].pg,p[1].pj)}</td></tr>`).join("");
- [a1,a2,b1,b2].forEach(s=>{let v=s.value;s.innerHTML='<option></option>'+players.map(p=>`<option>${p.name}</option>`).join("");s.value=v});
+
+ rankPoints.innerHTML=[...players]
+  .sort((a,b)=>b.points-a.points)
+  .map(p=>`<tr><td>${p.name}</td><td>${p.played}</td><td>${p.points}</td><td>🔥${p.streak}</td></tr>`).join("");
+
+ rankSets.innerHTML=[...players]
+  .sort((a,b)=>(b.setsWin/b.setsTotal)-(a.setsWin/a.setsTotal))
+  .map(p=>`<tr><td>${p.name}</td><td>${p.setsWin}</td><td>${p.setsTotal}</td><td class=pct>${pct(p.setsWin,p.setsTotal)}</td></tr>`).join("");
+
+ rankGames.innerHTML=[...players]
+  .sort((a,b)=>(b.gamesWin/b.gamesTotal)-(a.gamesWin/a.gamesTotal))
+  .map(p=>`<tr><td>${p.name}</td><td>${p.gamesWin}</td><td>${p.gamesTotal}</td><td class=pct>${pct(p.gamesWin,p.gamesTotal)}</td><td>${(p.gamesTotal/p.played||0).toFixed(1)}</td></tr>`).join("");
+
+ rankPairs.innerHTML=Object.entries(pairs)
+  .sort((a,b)=>(b[1].pg/b[1].pj)-(a[1].pg/a[1].pj))
+  .map(p=>`<tr><td>${p[0]}</td><td>${p[1].pj}</td><td>${p[1].pg}</td><td class=pct>${pct(p[1].pg,p[1].pj)}</td></tr>`).join("");
+
+ [a1,a2,b1,b2].forEach(s=>{
+  let v=s.value;
+  s.innerHTML='<option></option>'+players.map(p=>`<option>${p.name}</option>`).join("");
+  s.value=v;
+ });
 }
+
 render();
 </script>
 </body>
